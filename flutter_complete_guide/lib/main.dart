@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import './question.dart';
 /*
 void main() {
   runApp(MyApp());
@@ -7,15 +8,26 @@ void main() {
 
 void main() => runApp(MyApp());
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget{
+  @override
+  State<StatefulWidget> createState() {
+    return _MyAppState();
+  }
+
+}
+//"_" prefixed to Class & function makes it private
+class _MyAppState extends State<MyApp>{
   var questionIndex = 0;
-  void answerQuestion() {
-    questionIndex += 1;
+  void _answerQuestion() {
+    setState(() {
+      questionIndex += 1;
+    });
+    
   }
 
   @override
   Widget build(BuildContext context) {
-    var questions = [
+    var _questions = [
       'What\'s your favorite color',
       'What\'s your favorite animal',
     ];
@@ -26,18 +38,18 @@ class MyApp extends StatelessWidget {
         ),
         body: Column(
           children: [
-            Text(questions[questionIndex]),
+            Question(_questions[questionIndex]),
             RaisedButton(
               child: Text('Answer 1'),
-              onPressed: answerQuestion,
+              onPressed: _answerQuestion,
             ),
             RaisedButton(
               child: Text('Answer 2'),
-              onPressed: answerQuestion,
+              onPressed: _answerQuestion,
             ),
             RaisedButton(
               child: Text('Answer 3'),
-              onPressed: answerQuestion,
+              onPressed: _answerQuestion,
             ),
           ],
         ),
