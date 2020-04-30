@@ -41,6 +41,16 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
+  List<Transaction> get recentTransactions {
+    return _userTransactions.where((tx) {
+      return tx.date.isAfter(
+        DateTime.now().subtract(
+          Duration(days: 7),
+        ),
+      );
+    }).toList();
+  }
+
   void _startAddNewTransaction(BuildContext ctx) {
     showModalBottomSheet(
       context: ctx,
@@ -95,13 +105,7 @@ class _MyAppState extends State<MyApp> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              Card(
-                child: Container(
-                  width: double.infinity,
-                  child: Chart(),
-                ),
-                elevation: 5,
-              ),
+              Chart(this.recentTransactions),
               Container(
                 height: 600,
                 child: TransactionList(_userTransactions),
