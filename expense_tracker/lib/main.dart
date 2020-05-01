@@ -29,11 +29,18 @@ class _MyAppState extends State<MyApp> {
     ),
   ];
 
-  void _addNewTransaction(String txTitle, double txAmount) {
+  void _deleteTransaction(String id) {
+    setState(() {
+      _userTransactions.removeWhere((tx) => tx.id == id);
+    });
+  }
+
+  void _addNewTransaction(
+      String txTitle, double txAmount, DateTime chosenDate) {
     final newTx = Transaction(
       title: txTitle,
       amount: txAmount,
-      date: DateTime.now(),
+      date: chosenDate,
       id: DateTime.now().toString(),
     );
     setState(() {
@@ -70,6 +77,7 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         primarySwatch: Colors.purple,
         accentColor: Colors.amber,
+        errorColor: Colors.red,
         fontFamily: 'Quicksand',
         textTheme: ThemeData.light().textTheme.copyWith(
               title: TextStyle(
@@ -84,6 +92,7 @@ class _MyAppState extends State<MyApp> {
                   fontFamily: 'OpenSan',
                   fontSize: 20,
                 ),
+                button: TextStyle(color: Colors.white),
               ),
         ),
       ),
@@ -108,7 +117,7 @@ class _MyAppState extends State<MyApp> {
               Chart(this.recentTransactions),
               Container(
                 height: 600,
-                child: TransactionList(_userTransactions),
+                child: TransactionList(_userTransactions,_deleteTransaction),
               ),
             ],
           ),
