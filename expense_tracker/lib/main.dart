@@ -1,9 +1,11 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
+
 import './widgets/new_transaction.dart';
 import 'package:flutter/material.dart';
-
 import 'models/transaction.dart';
-import 'widgets/chart.dart';
-import 'widgets/transaction_list.dart';
+import 'widgets/home.dart';
 
 void main() => runApp(MyApp());
 
@@ -27,12 +29,41 @@ class _MyAppState extends State<MyApp> {
       amount: 40.00,
       date: DateTime.now(),
     ),
+    Transaction(
+      id: '3',
+      title: 'Cable',
+      amount: 5.99,
+      date: DateTime.now(),
+    ),
+    Transaction(
+      id: '4',
+      title: 'Phone',
+      amount: 400.00,
+      date: DateTime.now(),
+    ),
+    Transaction(
+      id: '5',
+      title: 'New Cap',
+      amount: 4.20,
+      date: DateTime.now(),
+    ),
+    Transaction(
+      id: '6',
+      title: 'New tie',
+      amount: 10.00,
+      date: DateTime.now(),
+    ),
   ];
 
   void _deleteTransaction(String id) {
     setState(() {
       _userTransactions.removeWhere((tx) => tx.id == id);
     });
+  }
+
+  refresh() {
+    print("state called");
+    setState(() {});
   }
 
   void _addNewTransaction(
@@ -73,63 +104,47 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-        primarySwatch: Colors.purple,
-        accentColor: Colors.amber,
-        errorColor: Colors.red,
-        fontFamily: 'Quicksand',
-        textTheme: ThemeData.light().textTheme.copyWith(
-              title: TextStyle(
-                fontFamily: 'OpenSans',
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
+    return Platform.isIOS
+        ? CupertinoApp(
+            theme: CupertinoThemeData(
+              primaryColor: Colors.purple,
+            ),
+            home: Home(
+                recentTransactions: recentTransactions,
+                userTransactions: _userTransactions,
+                deleteTransaction: _deleteTransaction,
+                startAddNewTransaction: _startAddNewTransaction,
+                refresh: refresh),
+          )
+        : MaterialApp(
+            theme: ThemeData(
+              primarySwatch: Colors.purple,
+              accentColor: Colors.amber,
+              errorColor: Colors.red,
+              fontFamily: 'Quicksand',
+              textTheme: ThemeData.light().textTheme.copyWith(
+                    title: TextStyle(
+                      fontFamily: 'OpenSans',
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
+                  ),
+              appBarTheme: AppBarTheme(
+                textTheme: ThemeData.light().textTheme.copyWith(
+                      title: TextStyle(
+                        fontFamily: 'OpenSan',
+                        fontSize: 20,
+                      ),
+                      button: TextStyle(color: Colors.white),
+                    ),
               ),
             ),
-        appBarTheme: AppBarTheme(
-          textTheme: ThemeData.light().textTheme.copyWith(
-                title: TextStyle(
-                  fontFamily: 'OpenSan',
-                  fontSize: 20,
-                ),
-                button: TextStyle(color: Colors.white),
-              ),
-        ),
-      ),
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Expense Tracker'),
-          actions: <Widget>[
-            Builder(
-              builder: (context) => IconButton(
-                icon: Icon(Icons.add),
-                onPressed: () {
-                  _startAddNewTransaction(context);
-                },
-              ),
-            ),
-          ],
-        ),
-        body: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              Chart(this.recentTransactions),
-              Container(
-                height: 600,
-                child: TransactionList(_userTransactions,_deleteTransaction),
-              ),
-            ],
-          ),
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: Builder(
-          builder: (context) => FloatingActionButton(
-            child: Icon(Icons.add),
-            onPressed: () => _startAddNewTransaction(context),
-          ),
-        ),
-      ),
-    );
+            home: Home(
+                recentTransactions: recentTransactions,
+                userTransactions: _userTransactions,
+                deleteTransaction: _deleteTransaction,
+                startAddNewTransaction: _startAddNewTransaction,
+                refresh: refresh),
+          );
   }
 }
