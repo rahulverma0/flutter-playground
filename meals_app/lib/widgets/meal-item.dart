@@ -18,10 +18,12 @@ class MealItem extends StatelessWidget {
     this.affordability,
   });
   void selectMeal(BuildContext ctx) {
-    Navigator.of(ctx).pushNamed(
-      MealDetailScreen.routerName,
-      arguments: id,
-    );
+    Navigator.of(ctx)
+        .pushNamed(
+          MealDetailScreen.routerName,
+          arguments: id,
+        )
+        .then((result) => {print(result)  });
   }
 
   String get getAffordabilityText {
